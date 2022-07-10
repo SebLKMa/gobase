@@ -1,0 +1,95 @@
+{{ define "scriptpolar" }}
+<script language="javascript" type="text/javascript">
+
+var tempeScore = {{ .MetricScores.Temperature }}/2
+var humidScore = {{ .MetricScores.Humidity }}/2
+var co2Score = {{ .MetricScores.CO2 }}/3
+var vocScore = {{ .MetricScores.VOC }}/3
+var pm25Score = {{ .MetricScores.PM25 }}/3
+var visualScore = {{ .MetricScores.Lighting }}
+var acousticScore = {{ .MetricScores.Noise }}
+
+const labels = ["Thermal", "Air", "Visual", "Acoustic"];
+var polarscores = [tempeScore+humidScore, co2Score+vocScore+pm25Score, visualScore, acousticScore]; 
+//console.log("polar scores: " + polarscores)
+// color from donut ["#3e95cd", "#839711","#e2d046","#e9a486","#FFFFFF"],
+var colorThermal = Color("#3e95cd");
+colorThermal.alpha(0.5);
+var hslThermal = colorThermal.hslString();
+
+var colorAir = Color("#839711");
+colorAir.alpha(0.5);//.lighten(0.5);
+var hslAir = colorAir.hslString();
+
+var colorVisual = Color("#e2d046");
+colorVisual.alpha(0.5);//.lighten(0.5);
+var hslVisual = colorVisual.hslString();
+
+var colorAcoustic = Color("#e9a486");
+colorAcoustic.alpha(0.5);
+var hslAcoustic = colorAcoustic.hslString();
+
+var chartData = {
+    labels: labels,
+    datasets: [
+        {
+            data: polarscores,
+            //borderWidth: 3,
+            backgroundColor: [
+                hslThermal,
+                hslAir,
+                hslVisual,
+                hslAcoustic]
+        }
+    ]
+}
+
+var configPolar = {
+    type: "polarArea",
+    data: chartData,
+    options: {
+        //title: {
+        //    display: true,
+        //    position: 'top',
+        //    fontSize: 24,
+        //    text: "Indoor Environment Quality"
+        //},
+        legend: {
+            position: 'right',
+        },
+        scale: {
+            ticks: {
+                beginAtZero: true,
+                min: 0,
+                max: 100,
+                stepSize: 20,
+                fontSize: 20
+            }
+        }
+    }
+};
+
+var ctx = document.getElementById("polar-chart");
+new Chart(ctx, configPolar);
+/*
+new Chart(ctx, {
+        type: "polarArea",
+        data: chartData,
+        options: {
+            legend: {
+                position: 'right'
+            },
+            scale: {
+                ticks: {
+                    beginAtZero: true,
+                    min: 0,
+                    max: 100,
+                    stepSize: 20,
+                    fontSize: 20
+                }
+            }
+        }
+    });
+*/
+</script>
+{{ end }}

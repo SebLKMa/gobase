@@ -1,0 +1,264 @@
+{{ define "scriptlinetargets" }}
+<script language="javascript" type="text/javascript">
+
+// The x-axis
+//var time = ["15:37:41","15:38:59","15:42:47","15:45:38","15:46:17","15:46:47","15:47:25","15:48:30","15:13:21","16:42:38"];
+var time = {{.Times}}
+// For drawing the lines
+var temperatures = {{.Temperatures}}
+var temperaturesMin = {{.TemperaturesMin}}
+var temperaturesMax = {{.TemperaturesMax}}
+var humidities = {{.Humidities}}
+var humiditiesMin = {{.HumiditiesMin}}
+var humiditiesMax = {{.HumiditiesMax}}
+var co2s = {{.CO2s}}
+var co2sMax = {{.CO2sMax}}
+var vocs = {{.VOCs}}
+var vocsMax = {{.VOCsMax}}
+var pm25s = {{.PM25s}}
+var pm25sMax = {{.PM25sMax}}
+var visuals = {{.Visuals}}
+var visualsMin = {{.VisualsMin}}
+var visualsMax = {{.VisualsMax}}
+var acoustics = {{.Acoustics}}
+var acousticsMin = {{.AcousticsMin}}
+var acousticsMax = {{.AcousticsMax}}
+
+// Below are for demo only
+// - Target minimum and maximum should be passed in
+// - Red or Green borderColor should be based on range targets
+// - Red or Grey backgroundColor should be based on range targets
+window.chartColors = {
+	red: 'rgb(255, 99, 132)',
+	orange: 'rgb(255, 159, 64)',
+	yellow: 'rgb(255, 205, 86)',
+	green: 'rgb(75, 192, 192)',
+	blue: 'rgb(54, 162, 235)',
+	purple: 'rgb(153, 102, 255)',
+	grey: 'rgb(201, 203, 207)',
+  custom: 'rgb(33, 166, 153, 1)',
+  customfill: 'rgb(231, 156, 156, 1)'//'rgb(232, 125, 125, 1)'
+};
+var presets = window.chartColors;
+function transparentize(color, opacity) {
+    var alpha = opacity === undefined ? 0.5 : 1 - opacity;
+    return Color(color).alpha(alpha).rgbString();
+}
+
+var ctx;
+var myChart;
+ctx = document.getElementById("temperature-chart");
+myChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: time,
+    datasets: [
+    {
+				backgroundColor: transparentize(presets.grey),
+				borderColor: presets.custom,
+				data: temperaturesMin,
+				label: 'Ideal-Minimum',
+        borderDash: [10,5],
+				fill: '+1'
+			},
+      {
+				backgroundColor: transparentize(presets.grey),
+				borderColor: presets.custom,
+				data: temperaturesMax,
+				label: 'Ideal-Maximum',
+        borderDash: [10,5]
+				//fill: '+2'
+			},
+      
+      { 
+        backgroundColor: transparentize(presets.customfill),
+        data: temperatures,
+        label: "Temperature(°C)",
+        //borderColor: "rgba(62, 149, 205, 1)",
+        borderColor: presets.blue,
+        //fill: false
+        fill: '-1'
+      }
+    ]
+  }
+});
+
+ctx = document.getElementById("humidity-chart");
+myChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: time,
+    datasets: [
+    {
+				backgroundColor: transparentize(presets.grey),
+				borderColor: presets.custom,
+				data: humiditiesMin,
+				label: 'Ideal-Minimum',
+        borderDash: [10,5],
+				fill: '+1'
+			},
+      {
+				backgroundColor: transparentize(presets.grey),
+				borderColor: presets.custom,
+				data: humiditiesMax,
+				label: 'Ideal-Maximum',
+        borderDash: [10,5]
+				//fill: '+2'
+			},
+      { 
+        backgroundColor: transparentize(presets.customfill),
+        data: humidities,
+        label: "Humidity(%)",
+        //borderColor: "rgba(62, 149, 205, 0.6)",
+        borderColor: presets.green,
+        //fill: false
+        fill: '-1'
+      }
+    ]
+  }
+});
+
+ctx = document.getElementById("co2-chart");
+myChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: time,
+    datasets: [
+      {
+				backgroundColor: transparentize(presets.grey),
+				borderColor: presets.custom,
+				data: co2sMax,
+				label: 'Ideal-Maximum',
+        borderDash: [10,5]
+			},
+      { 
+        backgroundColor: transparentize(presets.customfill),
+        data: co2s,
+        label: "CO2(ppm)",
+        borderColor: "rgba(131, 151, 17, 0.3)",
+        //fill: false
+        fill: '-1'
+      }
+    ]
+  }
+});
+
+ctx = document.getElementById("voc-chart");
+myChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: time,
+    datasets: [
+      {
+				backgroundColor: transparentize(presets.grey),
+				borderColor: presets.custom,
+				data: vocsMax,
+				label: 'Ideal-Maximum',
+        borderDash: [10,5]
+			},
+      { 
+        backgroundColor: transparentize(presets.customfill),
+        data: vocs,
+        label: "VOC(ppb)",
+        borderColor: "rgba(131, 151, 17, 0.6)",
+        //fill: false
+        fill: '-1'
+      }
+    ]
+  }
+});
+
+ctx = document.getElementById("pm25-chart");
+myChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: time,
+    datasets: [
+      {
+				backgroundColor: transparentize(presets.grey),
+				borderColor: presets.custom,
+				data: pm25sMax,
+				label: 'Ideal-Maximum',
+        borderDash: [10,5]
+			},
+      { 
+        backgroundColor: transparentize(presets.customfill),
+        data: pm25s,
+        label: "PM2.5(ug/m3)",
+        borderColor: "rgba(131, 151, 17, 1)",
+        //fill: false
+        fill: '-1'
+      }
+    ]
+  }
+});
+
+// check if we have visuals
+var checksum = visuals.reduce((a, b) => a + b, 0);
+if (checksum>0) {
+  ctx = document.getElementById("visual-chart");
+  myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: time,
+      datasets: [
+      {
+          backgroundColor: transparentize(presets.grey),
+          borderColor: presets.custom,
+          data: visualsMin,
+          label: 'Ideal-Minimum',
+          borderDash: [10,5],
+          fill: '+1'
+        },
+        {
+          backgroundColor: transparentize(presets.grey),
+          borderColor: presets.custom,
+          data: visualsMax,
+          label: 'Ideal-Maximum',
+          borderDash: [10,5]
+          //fill: '+2'
+        },
+        { 
+          backgroundColor: transparentize(presets.customfill),
+          data: visuals,
+          label: "Lux",
+          borderColor: "rgba(226, 208, 70, 1)",
+          //fill: false
+          fill: '-1'
+        }
+      ]
+    }
+  });
+}
+
+// check if we have acoustics
+checksum = acoustics.reduce((a, b) => a + b, 0);
+if (checksum>0) {
+  ctx = document.getElementById("acoustics-chart");
+  myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: time,
+      datasets: [
+        {
+          backgroundColor: transparentize(presets.grey),
+          borderColor: presets.custom,
+          data: acousticsMax,
+          label: 'Ideal-Maximum',
+          borderDash: [10,5]
+        },
+        { 
+          backgroundColor: transparentize(presets.customfill),
+          data: acoustics,
+          label: "dBA",
+          borderColor: "rgba(233, 164, 134, 1)",
+          //fill: false,
+          fill: '-1'
+        }
+      ]
+    }
+  });
+}
+
+</script>
+{{ end }}

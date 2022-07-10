@@ -1,0 +1,48 @@
+{{ define "line_a" }}
+{{ template "chartheader" . }}
+{{ template "chartcss" . }}
+  <div class="wrapper">
+  <!--
+    <hr class="solid"/>
+
+    <h1>Thermal values over time</h1>
+    <canvas id="thermal-chart" width="1600" height="900"></canvas>
+
+    <hr class="solid"/>
+
+    <h1>Indoor Air Quality values over time</h1>
+    <canvas id="iaq-chart" width="1600" height="900"></canvas>
+  -->
+  <hr class="solid"/>
+
+  <h1>Temperature values over time</h1>
+  <canvas id="temperature-chart" width="1600" height="900"></canvas>
+
+  <hr class="solid"/>
+
+  <h1>Humidity values over time</h1>
+  <canvas id="humidity-chart" width="1600" height="900"></canvas>  
+  
+  <hr class="solid"/>
+  
+  <h1>CO2 values over time</h1>
+  <canvas id="co2-chart" width="1600" height="900"></canvas>
+
+  <hr class="solid"/>
+
+  <h1>VOCs values over time</h1>
+  <canvas id="voc-chart" width="1600" height="900"></canvas>
+
+  <hr class="solid"/>
+
+  <h1>PM2.5 values over time</h1>
+  <canvas id="pm25-chart" width="1600" height="900"></canvas>
+
+  <hr class="solid"/>
+  
+  </div>
+  <!--
+  {{ template "scriptline_a" . }}
+  -->
+  {{ template "scriptlinetargets" . }}
+{{ end }}
